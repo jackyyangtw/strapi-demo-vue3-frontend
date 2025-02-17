@@ -1,9 +1,15 @@
 <!-- Restaurant.vue -->
 <template>
-    <li>
-        <h3>{{ restaurant.Name }}</h3>
-        <h4>敘述:</h4>
-        <div v-for="(block, index) in restaurant.Description" :key="index">
+    <li class="restaurant-category p-4 rounded-xl shadow-lg bg-white w-full">
+        <h3 class="text-lg font-semibold text-gray-900">{{
+            restaurant.Name
+        }}</h3>
+        <h4 class="text-sm text-gray-600 mt-2">敘述:</h4>
+        <div
+            v-for="(block, index) in restaurant.Description"
+            :key="index"
+            class="text-gray-700 text-sm mt-1"
+        >
             <p v-if="block.type === 'paragraph'">
                 <span
                     v-for="(child, childIndex) in block.children"
@@ -14,16 +20,24 @@
             </p>
         </div>
         <!-- 刪除按鈕 -->
-        <button @click="handleDelete">刪除</button>
-        <button @click="openEditModal" class="bg:beryl!">編輯</button>
-        <EditModal v-if="editModal.show"></EditModal>
+        <div class="flex space-x-2 mt-4">
+            <button
+                @click="handleDelete"
+                class="py-1 px-3 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 shadow-md cursor-pointer"
+                >刪除關聯</button
+            >
+            <button
+                @click="openEditModal"
+                class="py-1 px-3 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 shadow-md cursor-pointer"
+                >編輯</button
+            >
+        </div>
     </li>
 </template>
 
 <script setup lang="ts">
 import { useRestaurantStore } from "../store/restaurant";
 import { Restaurant } from "../types/restaurant";
-import EditModal from "./EditModal.vue";
 import { storeToRefs } from "pinia";
 const props = defineProps<{
     restaurant: Restaurant;
@@ -49,17 +63,3 @@ const handleDelete = () => {
     }
 };
 </script>
-
-<style scoped>
-button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-button:hover {
-    background-color: darkred;
-}
-</style>

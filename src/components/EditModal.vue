@@ -1,15 +1,26 @@
 <!-- EditModal.vue -->
 <template>
     <div
-        class="edit-modal fixed z:10 inset:0 bg:white flex justify:center items:center"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.9]"
     >
-        <div class="w:50% mx:auto">
-            <h2>編輯{{ restaurantName }}</h2>
+        <div
+            class="bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl"
+        >
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                編輯 {{ restaurantName }}
+            </h2>
             <RestaurantForm
                 :restaurant="editModal.restaurant"
                 @submit="cancel"
             />
-            <button @click="cancel">關閉</button>
+            <div class="mt-4">
+                <button
+                    @click="cancel"
+                    class="py-2 px-4 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 shadow-md"
+                >
+                    關閉
+                </button>
+            </div>
         </div>
     </div>
 </template>

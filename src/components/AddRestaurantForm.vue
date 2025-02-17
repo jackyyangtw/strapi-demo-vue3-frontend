@@ -1,6 +1,8 @@
 <!-- AddRestaurantForm.vue -->
 <template>
-    <h2>新增餐廳</h2>
+    <h2 class="text-3xl font-extrabold text-gray-900 my-6 pb-3 tracking-wide"
+        >🆕 新增餐廳</h2
+    >
     <RestaurantForm :restaurant="null" @submit="handleSuccess" />
 </template>
 

@@ -1,6 +1,6 @@
-# strapi project
+# tailwindcss
 
--   https://cloud.strapi.io/projects
+-   https://tailwindcss.com/docs/installation/using-vite
 
 # railway app
 

@@ -1,43 +1,73 @@
 <!-- RestaurantForm.vue -->
 <template>
-    <form @submit.prevent="handleSubmit">
+    <form
+        @submit.prevent="handleSubmit"
+        class="max-w-lg bg-white p-6 rounded-lg shadow-md space-y-4"
+    >
         <div>
-            <label for="name">名稱：</label>
-            <input id="name" v-model="formData.Name" type="text" required />
+            <label for="name" class="block text-sm font-medium text-gray-700"
+                >名稱：</label
+            >
+            <input
+                id="name"
+                v-model="formData.Name"
+                type="text"
+                required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
         </div>
 
         <div>
-            <label for="description">描述：</label>
+            <label
+                for="description"
+                class="block text-sm font-medium text-gray-700"
+                >描述：</label
+            >
             <textarea
                 id="description"
                 v-model="formData.Description"
                 required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
         </div>
 
-        <div>
-            <label>分類：</label>
-            <div class="flex flex-wrap gap:16">
+        <div v-if="loadingCategories" class="text-gray-500 text-sm"
+            >正在載入{{ formData.Name }}的分類...</div
+        >
+        <div v-else>
+            <label class="block text-sm font-medium text-gray-700"
+                >分類：</label
+            >
+            <div class="flex flex-wrap gap-4 mt-2">
                 <div
                     v-for="category in categories"
                     :key="category.id"
-                    class="flex jc:center ai:center"
+                    class="flex items-center space-x-2"
                 >
                     <input
                         type="checkbox"
                         :id="'category-' + category.id"
                         :value="category.id"
                         v-model="formData.categories"
+                        class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
-                    <label :for="'category-' + category.id">{{
-                        category.Name
-                    }}</label>
+                    <label
+                        :for="'category-' + category.id"
+                        class="text-sm text-gray-700"
+                        >{{ category.Name }}</label
+                    >
                 </div>
             </div>
         </div>
 
-        <button type="submit">{{ isEditMode ? "更新" : "新增" }}</button>
-        <p v-if="message">{{ message }}</p>
+        <button
+            type="submit"
+            class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+            {{ isEditMode ? "更新" : "新增" }}
+        </button>
+
+        <p v-if="message" class="text-sm text-green-600 mt-2">{{ message }}</p>
     </form>
 </template>
 
@@ -66,10 +96,13 @@ const message = ref("");
 // 是否為編輯模式
 const isEditMode = computed(() => props.restaurant !== null);
 
+const loadingCategories = ref(false);
 const fetchCategories = async () => {
     try {
+        loadingCategories.value = true;
         const response = await api.get("/categories");
         categories.value = response.data.data;
+        loadingCategories.value = false;
     } catch (error) {
         console.error("無法取得分類資料：", error);
     }
@@ -120,7 +153,7 @@ onMounted(() => {
     fetchCategories();
 });
 </script>
-<style scoped>
+<!-- <style scoped>
 form {
     display: flex;
     flex-direction: column;
@@ -157,4 +190,4 @@ p {
     margin-top: 1em;
     color: #42b983;
 }
-</style>
+</style> -->

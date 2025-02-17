@@ -1,13 +1,15 @@
 <!-- RestaurantCategorie.vue -->
 <template>
     <div
-        class="restaurant-category p:1rem w:30% r:30 box-shadow:0|0|10|0|rgba(0,0,0,0.1)"
+        class="restaurant-category p-10 w-full sm:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)] rounded-xl shadow-lg bg-white"
     >
-        <h3>{{ restaurantCategorie }} 餐廳</h3>
+        <h3 class="text-lg font-semibold text-gray-900"
+            >{{ restaurantCategorie }} 餐廳</h3
+        >
 
-        <p v-if="isLoading">載入中...</p>
+        <p v-if="isLoading" class="text-gray-600 mt-2">載入中...</p>
 
-        <ul v-if="restaurants.length && !isLoading">
+        <ul class="mt-6 space-y-4" v-if="restaurants.length && !isLoading">
             <RestaurantItem
                 v-for="restaurant in restaurants"
                 :key="restaurant.id"
@@ -16,7 +18,9 @@
             />
         </ul>
 
-        <p v-if="!restaurants.length && !isLoading">沒有餐廳資料</p>
+        <p v-if="!restaurants.length && !isLoading" class="text-gray-500 mt-2"
+            >沒有餐廳資料</p
+        >
     </div>
 </template>
 
