@@ -2,7 +2,7 @@
 <template>
     <form
         @submit.prevent="handleSubmit"
-        class="max-w-lg bg-white p-6 rounded-lg shadow-md space-y-4"
+        class="max-w-lg bg-white p-6 rounded-lg shadow-lg space-y-4"
     >
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700"

@@ -4,7 +4,7 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.9]"
     >
         <div
-            class="bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl"
+            class="bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl relative"
         >
             <h2 class="text-xl font-semibold text-gray-900 mb-4">
                 編輯 {{ restaurantName }}
@@ -13,10 +13,10 @@
                 :restaurant="editModal.restaurant"
                 @submit="cancel"
             />
-            <div class="mt-4">
+            <div class="absolute top-4 right-4">
                 <button
                     @click="cancel"
-                    class="py-2 px-4 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 shadow-md"
+                    class="py-2 px-4 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 shadow-md cursor-pointer"
                 >
                     關閉
                 </button>

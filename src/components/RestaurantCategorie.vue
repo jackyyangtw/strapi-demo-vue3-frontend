@@ -1,7 +1,7 @@
 <!-- RestaurantCategorie.vue -->
 <template>
     <div
-        class="restaurant-category p-10 w-full sm:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)] rounded-xl shadow-lg bg-white"
+        class="restaurant-category p-10 w-full sm:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)] rounded-lg shadow-xl bg-gray-200"
     >
         <h3 class="text-lg font-semibold text-gray-900"
             >{{ restaurantCategorie }} 餐廳</h3

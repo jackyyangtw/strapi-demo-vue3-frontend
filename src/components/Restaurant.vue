@@ -1,6 +1,8 @@
 <!-- Restaurant.vue -->
 <template>
-    <li class="restaurant-category p-4 rounded-xl shadow-lg bg-white w-full">
+    <li
+        class="restaurant-category p-4 rounded-lg inset-shadow-gray-400/[0.8] inset-shadow-sm bg-gray-200 w-full"
+    >
         <h3 class="text-lg font-semibold text-gray-900">{{
             restaurant.Name
         }}</h3>
