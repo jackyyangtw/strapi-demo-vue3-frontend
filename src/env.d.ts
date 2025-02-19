@@ -1,7 +1,6 @@
-interface ImportMetaEnv {
-    readonly VITE_APP_API_URL: string;
-}
-
 interface ImportMeta {
-    readonly env: ImportMetaEnv;
+    readonly env: {
+        VITE_APP_API_URL: string;
+        VITE_APP_API_TOKEN: string;
+    };
 }
