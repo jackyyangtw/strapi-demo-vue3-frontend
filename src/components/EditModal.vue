@@ -7,7 +7,8 @@
             class="bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl relative"
         >
             <h2 class="text-xl font-semibold text-gray-900 mb-4">
-                編輯 {{ restaurantName }}
+                編輯
+                <span class="text-green-700">{{ restaurantName }}</span> 餐廳
             </h2>
             <RestaurantForm
                 :restaurant="editModal.restaurant"

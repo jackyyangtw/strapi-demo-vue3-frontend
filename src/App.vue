@@ -1,3 +1,4 @@
+<!-- App.vue -->
 <template>
     <Banner />
     <div class="container py-6 px-4 mx-auto">
@@ -16,5 +17,4 @@ import { useRestaurantStore } from "./store/restaurant";
 import { storeToRefs } from "pinia";
 const restaurantStore = useRestaurantStore();
 const { editModal } = storeToRefs(restaurantStore);
-console.log(import.meta.env.VITE_APP_API_URL);
 </script>

@@ -2,7 +2,9 @@
 <template>
     <div class="restaurant-category p-10 w-full rounded-lg shadow-xl bg-white">
         <h3 class="text-lg font-semibold text-gray-900"
-            >{{ restaurantCategorie }} 餐廳</h3
+            >有
+            <span class="text-sky-500">{{ restaurantCategorie }}</span>
+            的餐廳</h3
         >
 
         <p v-if="isLoading" class="text-gray-600 mt-2">載入中...</p>
