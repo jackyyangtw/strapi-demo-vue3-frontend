@@ -2,7 +2,7 @@
 <template>
     <form
         @submit.prevent="handleSubmit"
-        class="max-w-lg bg-white p-6 rounded-lg shadow-lg space-y-4"
+        class="max-w-lg p-6 rounded-lg shadow-lg space-y-4 bg-white"
     >
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700"
@@ -13,7 +13,7 @@
                 v-model="formData.Name"
                 type="text"
                 required
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md inset-shadow-xs focus:ring-blue-500 focus:border-blue-500"
             />
         </div>
 
@@ -27,7 +27,7 @@
                 id="description"
                 v-model="formData.Description"
                 required
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md inset-shadow-xs focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
         </div>
 
@@ -62,9 +62,9 @@
 
         <button
             type="submit"
-            class="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md inset-shadow-xs inset-shadow-green-700 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
-            {{ isEditMode ? "更新" : "新增" }}
+            {{ btnText }}
         </button>
 
         <p v-if="message" class="text-sm text-green-600 mt-2">{{ message }}</p>
@@ -127,67 +127,51 @@ watch(
     { immediate: true }
 );
 
+const isSubmitting = ref(false);
 const handleSubmit = async () => {
+    isSubmitting.value = true;
     if (isEditMode.value) {
         // 編輯模式
-        await updateRestaurant(props.restaurant.documentId, {
+        const success = await updateRestaurant(props.restaurant.documentId, {
             Name: formData.value.Name,
             Description: formData.value.Description,
             categories: formData.value.categories,
         });
-        message.value = "餐廳更新成功！";
+        if (!success) {
+            message.value = "餐廳更新失敗！";
+        } else {
+            message.value = "餐廳更新成功！";
+        }
     } else {
         // 新增模式
-        await addRestaurant({
+        const success = await addRestaurant({
             Name: formData.value.Name,
             Description: formData.value.Description,
             categories: formData.value.categories,
         });
-        formData.value = { Name: "", Description: "", categories: [] };
-        message.value = "餐廳已新增！";
+
+        if (success) {
+            formData.value = { Name: "", Description: "", categories: [] };
+            message.value = "餐廳已新增！";
+        }
     }
+    isSubmitting.value = false;
+    setTimeout(() => {
+        message.value = "";
+    }, 2000);
     emit("submit");
 };
 
+const btnText = computed(() => {
+    if (isSubmitting.value) {
+        return "處理中...";
+    }
+    if (isEditMode.value) {
+        return "更新";
+    }
+    return "新增";
+});
 onMounted(() => {
     fetchCategories();
 });
 </script>
-<!-- <style scoped>
-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-}
-div {
-    margin-bottom: 1em;
-}
-label {
-    margin-bottom: 0.5em;
-    color: #333333;
-}
-input,
-textarea,
-select {
-    padding: 0.5em;
-    font-size: 1em;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    width: 100%;
-}
-button {
-    padding: 0.7em;
-    color: #fff;
-    background-color: #42b983;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-button:hover {
-    background-color: #369870;
-}
-p {
-    margin-top: 1em;
-    color: #42b983;
-}
-</style> -->

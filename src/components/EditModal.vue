@@ -16,9 +16,9 @@
             <div class="absolute top-4 right-4">
                 <button
                     @click="cancel"
-                    class="py-2 px-4 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 shadow-md cursor-pointer"
+                    class="flex justify-center items-center p-4 w-[10px] h-[10px] bg-gray-500 text-white text-lg rounded-full hover:bg-gray-600 shadow-md cursor-pointer"
                 >
-                    關閉
+                    x
                 </button>
             </div>
         </div>

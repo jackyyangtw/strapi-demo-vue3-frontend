@@ -82,7 +82,8 @@ export const useRestaurantStore = defineStore("restaurant", () => {
     const deleteRestaurant = async (
         restaurantId: string,
         categoryName: string
-    ) => {
+    ): Promise<boolean> => {
+        let isDeleting = true;
         try {
             // 取得餐廳完整資訊
             const { data } = await api.get(
@@ -95,7 +96,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
 
             if (!cateId) {
                 console.warn("未找到對應分類，無法刪除");
-                return;
+                return false;
             }
 
             if (restaurant.categories.length > 1) {
@@ -109,8 +110,12 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             }
 
             await fetchRestaurantsByCategory(); // 更新前端狀態
+            return true;
         } catch (error) {
             console.error("刪除餐廳失敗:", error);
+            return false;
+        } finally {
+            isDeleting = false;
         }
     };
 
@@ -119,7 +124,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
         Name: string;
         Description: string;
         categories: number[];
-    }) => {
+    }): Promise<Boolean> => {
         try {
             const response = await api.post("/restaurants", {
                 data: {
@@ -142,11 +147,14 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             if (response.status === 200 || response.status === 201) {
                 console.log("餐廳新增成功:", response.data);
                 await fetchRestaurantsByCategory();
+                return true;
             } else {
                 console.error("餐廳新增失敗:", response);
+                return false;
             }
         } catch (error) {
             console.error("提交失敗：", error.response?.data || error.message);
+            return false;
         }
     };
     // 更新餐廳資訊
@@ -157,7 +165,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             Description?: string;
             categories?: number[];
         }
-    ) => {
+    ): Promise<Boolean> => {
         try {
             const response = await api.put(`/restaurants/${restaurantId}`, {
                 data: {
@@ -184,11 +192,14 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             if (response.status === 200 || response.status === 201) {
                 console.log("餐廳更新成功:", response.data);
                 await fetchRestaurantsByCategory();
+                return true;
             } else {
                 console.error("餐廳更新失敗:", response);
+                return false;
             }
         } catch (error) {
             console.error("更新失敗：", error.response?.data || error.message);
+            return false;
         }
     };
 

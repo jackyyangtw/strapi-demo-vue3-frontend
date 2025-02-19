@@ -1,7 +1,7 @@
 <!-- Restaurant.vue -->
 <template>
     <li
-        class="restaurant-category p-4 rounded-lg inset-shadow-gray-400/[0.8] inset-shadow-sm bg-gray-200 w-full"
+        class="restaurant-category p-4 rounded-lg inset-shadow-sm bg-white w-full"
     >
         <h3 class="text-lg font-semibold text-gray-900">{{
             restaurant.Name
@@ -26,7 +26,7 @@
             <button
                 @click="handleDelete"
                 class="py-1 px-3 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 shadow-md cursor-pointer"
-                >刪除關聯</button
+                >{{ isDeleting ? "刪除中..." : "刪除關聯" }}</button
             >
             <button
                 @click="openEditModal"
@@ -41,6 +41,7 @@
 import { useRestaurantStore } from "../store/restaurant";
 import { Restaurant } from "../types/restaurant";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 const props = defineProps<{
     restaurant: Restaurant;
     restaurantCategorie: string;
@@ -56,12 +57,18 @@ const openEditModal = async () => {
         editModal.value.restaurant = restaurantDetails;
     }
 };
-const handleDelete = () => {
+
+const isDeleting = ref(false);
+const handleDelete = async () => {
     if (props.restaurant.categories.length > 0) {
-        restaurantStore.deleteRestaurant(
+        isDeleting.value = true;
+        const success = await restaurantStore.deleteRestaurant(
             props.restaurant.documentId,
             props.restaurantCategorie
         );
+        if (success) {
+            isDeleting.value = false;
+        }
     }
 };
 </script>

@@ -1,7 +1,10 @@
+// src/api.js
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://strapi-demo-vue3-production.up.railway.app/api", // Strapi 伺服器地址
+    baseURL:
+        import.meta.env.VITE_APP_API_URL ||
+        "https://strapi-demo-vue3-production.up.railway.app/api", // Strapi 伺服器地址
     headers: {
         "Content-Type": "application/json",
         Authorization:

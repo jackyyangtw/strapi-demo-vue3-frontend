@@ -1,8 +1,12 @@
+<!-- AllRestaurants.vue -->
 <template>
     <h2 class="text-3xl font-extrabold text-gray-900 mb-6 pb-3 tracking-wide"
         >🍽️ 全部餐廳</h2
     >
-    <div class="flex flex-wrap gap-[2rem]" v-if="!isLoading">
+    <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        v-if="!isLoading"
+    >
         <RestaurantCategorie
             v-for="(
                 restaurants, category
@@ -19,9 +23,7 @@
 import { onMounted, ref } from "vue";
 import { useRestaurantStore } from "../store/restaurant";
 import RestaurantCategorie from "./RestaurantCategorie.vue";
-import { storeToRefs } from "pinia";
 const restaurantStore = useRestaurantStore();
-const { categoryRestaurants } = storeToRefs(restaurantStore);
 const isLoading = ref(false);
 
 onMounted(async () => {
