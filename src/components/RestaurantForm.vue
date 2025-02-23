@@ -31,28 +31,28 @@
             ></textarea>
         </div>
 
-        <div v-if="loadingCategories" class="text-gray-500 text-sm"
-            >正在載入{{ formData.Name }}的分類...</div
-        >
+        <div v-if="loadingCategories" class="text-gray-500 text-sm">
+            正在載入{{ formData.Name }}的分類...
+        </div>
         <div v-else>
             <label class="block text-sm font-medium text-gray-700"
                 >分類：</label
             >
             <div class="flex flex-wrap gap-4 mt-2">
                 <div
-                    v-for="category in categories"
-                    :key="category.id"
+                    v-for="category in allCategories"
+                    :key="category.documentId"
                     class="flex items-center space-x-2"
                 >
                     <input
                         type="checkbox"
-                        :id="'category-' + category.id"
-                        :value="category.id"
+                        :id="'category-' + category.documentId"
+                        :value="category.documentId"
                         v-model="formData.categories"
                         class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <label
-                        :for="'category-' + category.id"
+                        :for="'category-' + category.documentId"
                         class="text-sm text-gray-700"
                         >{{ category.Name }}</label
                     >
@@ -62,7 +62,8 @@
 
         <button
             type="submit"
-            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md inset-shadow-xs inset-shadow-green-700 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            :disabled="isSubmitting"
+            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md inset-shadow-xs inset-shadow-green-700 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed"
         >
             {{ btnText }}
         </button>
@@ -73,9 +74,8 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from "vue";
-import api from "../api.js";
-import type { Category } from "../types/category";
 import { useRestaurantStore } from "../store/restaurant.js";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
     restaurant: any | null; // 若為 null，表示是新增
@@ -83,25 +83,24 @@ const props = defineProps<{
 const emit = defineEmits(["submit"]); // 事件傳遞
 
 const restaurantStore = useRestaurantStore();
-const { addRestaurant, updateRestaurant } = restaurantStore;
+const { addRestaurant, updateRestaurant, fetchCategories } = restaurantStore;
+const { allCategories } = storeToRefs(restaurantStore);
 
 const formData = ref({
     Name: "",
     Description: "",
-    categories: [] as number[],
+    categories: [] as string[],
 });
-const categories = ref<Category[]>([]);
 const message = ref("");
 
 // 是否為編輯模式
 const isEditMode = computed(() => props.restaurant !== null);
 
 const loadingCategories = ref(false);
-const fetchCategories = async () => {
+const loadCategories = async () => {
     try {
         loadingCategories.value = true;
-        const response = await api.get("/categories");
-        categories.value = response.data.data;
+        await fetchCategories();
         loadingCategories.value = false;
     } catch (error) {
         console.error("無法取得分類資料：", error);
@@ -118,7 +117,9 @@ watch(
                 Description: newRestaurant.Description.flatMap((block: any) =>
                     block.children.map((child: any) => child.text)
                 ).join(" "),
-                categories: newRestaurant.categories.map((c: any) => c.id),
+                categories: newRestaurant.categories.map(
+                    (c: any) => c.documentId
+                ),
             };
         } else {
             formData.value = { Name: "", Description: "", categories: [] };
@@ -141,6 +142,7 @@ const handleSubmit = async () => {
             message.value = "餐廳更新失敗！";
         } else {
             message.value = "餐廳更新成功！";
+            formData.value = { Name: "", Description: "", categories: [] };
         }
     } else {
         // 新增模式
@@ -172,6 +174,6 @@ const btnText = computed(() => {
     return "新增";
 });
 onMounted(() => {
-    fetchCategories();
+    loadCategories();
 });
 </script>

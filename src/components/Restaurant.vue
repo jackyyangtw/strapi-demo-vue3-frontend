@@ -3,9 +3,9 @@
     <li
         class="restaurant-category p-4 rounded-lg inset-shadow-sm bg-white w-full"
     >
-        <h3 class="text-lg font-semibold text-gray-900">{{
-            restaurant.Name
-        }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900">
+            {{ restaurant.Name }}
+        </h3>
         <h4 class="text-sm text-gray-600 mt-2">敘述:</h4>
         <div
             v-for="(block, index) in restaurant.Description"
@@ -25,14 +25,17 @@
         <div class="flex space-x-2 mt-4">
             <button
                 @click="handleDelete"
-                class="py-1 px-3 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 shadow-md cursor-pointer"
-                >{{ isDeleting ? "刪除中..." : "刪除關聯" }}</button
+                :disabled="isDeleting"
+                class="py-1 px-3 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 shadow-md cursor-pointer disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed"
             >
+                {{ isDeleting ? "刪除中..." : "刪除關聯" }}
+            </button>
             <button
                 @click="openEditModal"
                 class="py-1 px-3 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 shadow-md cursor-pointer"
-                >編輯</button
             >
+                編輯
+            </button>
         </div>
     </li>
 </template>

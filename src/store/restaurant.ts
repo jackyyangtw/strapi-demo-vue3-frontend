@@ -83,7 +83,6 @@ export const useRestaurantStore = defineStore("restaurant", () => {
         restaurantId: string,
         categoryName: string
     ): Promise<boolean> => {
-        let isDeleting = true;
         try {
             // 取得餐廳完整資訊
             const { data } = await api.get(
@@ -92,7 +91,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             const restaurant = data.data;
             const cateId = restaurant.categories.find(
                 (cate: Category) => cate.Name === categoryName
-            )?.id;
+            )?.documentId;
 
             if (!cateId) {
                 console.warn("未找到對應分類，無法刪除");
@@ -102,7 +101,9 @@ export const useRestaurantStore = defineStore("restaurant", () => {
             if (restaurant.categories.length > 1) {
                 // 解除該分類關聯
                 await api.put(`/restaurants/${restaurantId}`, {
-                    data: { categories: { disconnect: [{ id: cateId }] } },
+                    data: {
+                        categories: { disconnect: [{ documentId: cateId }] },
+                    },
                 });
             } else {
                 // 只有一個分類，刪除整筆資料
@@ -114,8 +115,6 @@ export const useRestaurantStore = defineStore("restaurant", () => {
         } catch (error) {
             console.error("刪除餐廳失敗:", error);
             return false;
-        } finally {
-            isDeleting = false;
         }
     };
 
@@ -123,7 +122,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
     const addRestaurant = async (restaurantData: {
         Name: string;
         Description: string;
-        categories: number[];
+        categories: string[];
     }): Promise<Boolean> => {
         try {
             const response = await api.post("/restaurants", {
@@ -163,7 +162,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
         updatedData: {
             Name?: string;
             Description?: string;
-            categories?: number[];
+            categories: string[];
         }
     ): Promise<Boolean> => {
         try {
@@ -207,6 +206,7 @@ export const useRestaurantStore = defineStore("restaurant", () => {
         categoryRestaurants,
         allCategories,
         editModal,
+        fetchCategories,
         updateRestaurant,
         fetchRestaurantsByCategory,
         deleteRestaurant,
