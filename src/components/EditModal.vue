@@ -4,7 +4,7 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/[0.9]"
     >
         <div
-            class="bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl relative"
+            class="bg-white w-full sm:w-3/4 mx-6 md:w-1/2 lg:w-1/3 p-6 rounded-lg shadow-xl relative"
         >
             <h2 class="text-xl font-semibold text-gray-900 mb-4">
                 編輯
@@ -13,6 +13,7 @@
             <RestaurantForm
                 :restaurant="editModal.restaurant"
                 @submit="cancel"
+                @delete="cancel"
             />
             <div class="absolute top-4 right-4">
                 <button
