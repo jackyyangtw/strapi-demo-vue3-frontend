@@ -27,7 +27,7 @@
                 id="description"
                 v-model="formData.Description"
                 required
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md inset-shadow-xs focus:ring-blue-500 focus:border-blue-500"
+                class="mt-2 block w-full p-2 border border-gray-300 rounded-md inset-shadow-xs focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
         </div>
 
@@ -58,32 +58,47 @@
                     >
                 </div>
             </div>
+            <p v-if="categoryError" class="text-red-500 text-sm mt-2">
+                請至少選擇一個分類。
+            </p>
         </div>
 
-        <button
-            type="submit"
-            :disabled="isSubmitting"
-            class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md inset-shadow-xs inset-shadow-green-700 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed"
-        >
-            {{ btnText }}
-        </button>
+        <div class="grid gap-4" :class="{ 'grid-cols-2': isEditMode }">
+            <Submit type="submit" color="green" :isLoading="isSubmitting">{{
+                btnText
+            }}</Submit>
+            <Submit
+                v-if="isEditMode"
+                :isLoading="isDeleting"
+                type="button"
+                @click="handleDeleting"
+                color="red"
+                >{{ isDeleting ? "刪除中..." : "刪除此餐廳" }}</Submit
+            >
+        </div>
 
         <p v-if="message" class="text-sm text-green-600 mt-2">{{ message }}</p>
     </form>
 </template>
 
 <script setup lang="ts">
+import Submit from "./Button/Submit.vue";
 import { ref, watch, computed, onMounted } from "vue";
 import { useRestaurantStore } from "../store/restaurant.js";
 import { storeToRefs } from "pinia";
-
+import api from "../api.js";
 const props = defineProps<{
     restaurant: any | null; // 若為 null，表示是新增
 }>();
-const emit = defineEmits(["submit"]); // 事件傳遞
+const emit = defineEmits(["submit", "delete"]); // 事件傳遞
 
 const restaurantStore = useRestaurantStore();
-const { addRestaurant, updateRestaurant, fetchCategories } = restaurantStore;
+const {
+    addRestaurant,
+    updateRestaurant,
+    fetchCategories,
+    fetchRestaurantsByCategory,
+} = restaurantStore;
 const { allCategories } = storeToRefs(restaurantStore);
 
 const formData = ref({
@@ -129,7 +144,14 @@ watch(
 );
 
 const isSubmitting = ref(false);
+const categoryError = ref(false);
 const handleSubmit = async () => {
+    categoryError.value = false;
+
+    if (formData.value.categories.length === 0) {
+        categoryError.value = true;
+        return;
+    }
     isSubmitting.value = true;
     if (isEditMode.value) {
         // 編輯模式
@@ -162,6 +184,15 @@ const handleSubmit = async () => {
         message.value = "";
     }, 2000);
     emit("submit");
+};
+
+const isDeleting = ref(false);
+const handleDeleting = async () => {
+    isDeleting.value = true;
+    await api.delete(`/restaurants/${props.restaurant.documentId}`);
+    await fetchRestaurantsByCategory();
+    isDeleting.value = false;
+    emit("delete");
 };
 
 const btnText = computed(() => {
