@@ -4,7 +4,12 @@
         :type="props.type"
         :disabled="isLoading"
         class="w-full py-2 px-4 text-white font-semibold rounded-md inset-shadow-xs focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:inset-shadow-none"
-        :class="[colorClass]"
+        :class="{
+            'bg-green-600 hover:bg-green-700 focus:ring-green-500 inset-shadow-green-700':
+                props.color === 'green',
+            'bg-red-600 hover:bg-red-700 focus:ring-red-500 inset-shadow-red-700':
+                props.color === 'red',
+        }"
         @click="$emit('click')"
     >
         <slot></slot>
@@ -12,8 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
 // 定義按鈕類型
 type ButtonType = "submit" | "button";
 type ButtonColor = "green" | "red"; // 可擴充為其他顏色
@@ -27,9 +30,4 @@ const props = defineProps<{
 defineEmits<{
     (event: "click"): void;
 }>();
-
-const colorClass = computed(
-    () =>
-        `bg-${props.color}-600 inset-shadow-${props.color}-700 hover:bg-${props.color}-700 focus:ring-${props.color}-500`
-);
 </script>
